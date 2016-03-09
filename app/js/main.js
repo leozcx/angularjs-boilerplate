@@ -2,6 +2,11 @@
 
 'use strict';
 
+require('angular');
+require('angular-route');
+require('angular-animate');
+var mainController = require('./controller/main-controller');
+
   angular.module('SampleApp', ['ngRoute', 'ngAnimate'])
 
   .config([
@@ -19,16 +24,10 @@
            redirectTo: '/'
         });
     }
-  ]);
-
-  //Load controller
-  angular.module('SampleApp')
-
+  ])
   .controller('MainController', [
     '$scope',
-    function($scope) {
-      $scope.test = "Testing...";
-    }
+    mainController
   ]);
 
 }());
