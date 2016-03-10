@@ -5,11 +5,12 @@
 require('angular');
 require('angular-route');
 require('angular-animate');
-var mainController = require('./controller/main-controller');
 
-  angular.module('SampleApp', ['ngRoute', 'ngAnimate'])
 
-  .config([
+var app = angular.module('SampleApp', ['ngRoute', 'ngAnimate']);
+require('./controller');
+
+app.config([
     '$locationProvider',
     '$routeProvider',
     function($locationProvider, $routeProvider) {
@@ -24,10 +25,6 @@ var mainController = require('./controller/main-controller');
            redirectTo: '/'
         });
     }
-  ])
-  .controller('MainController', [
-    '$scope',
-    mainController
   ]);
 
 }());

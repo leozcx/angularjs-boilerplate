@@ -10,12 +10,12 @@ var browserify = require('gulp-browserify');
 var concat = require('gulp-concat');
 
 gulp.task('lint', function() {
-	gulp.src([ './app/**/*.js', '!./app/bower_components/**' ]).pipe(jshint())
+	return gulp.src([ './app/**/*.js', '!./app/bower_components/**' ]).pipe(jshint())
 			.pipe(jshint.reporter('default')).pipe(jshint.reporter('fail'));
 });
 
 gulp.task('clean', function() {
-	gulp.src(['./dist/*', './app/js/bundled.js']).pipe(clean({
+	return gulp.src(['./dist/*', './app/js/bundled.js']).pipe(clean({
 		force : true
 	}));
 });
@@ -25,26 +25,26 @@ gulp.task('minify-css', function() {
 		comments : true,
 		spare : true
 	};
-	gulp.src([ './app/**/*.css', '!./app/bower-components/**' ]).pipe(
+	return gulp.src([ './app/**/*.css', '!./app/bower-components/**' ]).pipe(
 			minifyCSS(opts)).pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('minify-js', function() {
-	gulp.src([ './app/**/*.js', '!./app/bower_components/**' ])
+	return gulp.src([ './app/**/*.js', '!./app/bower_components/**' ])
 			.pipe(uglify({})).pipe(gulp.dest('./dist/'))
 });
 
 gulp.task('copy-bower-components', function() {
-	gulp.src('./app/bower_components/**').pipe(
+	return gulp.src('./app/bower_components/**').pipe(
 			gulp.dest('dist/bower_components'));
 });
 
 gulp.task('copy-html-files', function() {
-	gulp.src('./app/**/*.html').pipe(gulp.dest('dist/'));
+	return gulp.src('./app/**/*.html').pipe(gulp.dest('dist/'));
 });
 
 gulp.task('browserify', function() {
-	gulp.src(['./app/js/main.js'])
+	return gulp.src(['./app/js/main.js'])
 	.pipe(browserify({
 		insertGlobals: true,
 		debug: true
@@ -54,7 +54,7 @@ gulp.task('browserify', function() {
 });
 
 gulp.task('browserifyDist', function() {
-	gulp.src(['./app/js/main.js'])
+	return gulp.src(['./app/js/main.js'])
 	.pipe(browserify({
 		insertGlobals: true,
 		debug: true
@@ -65,20 +65,22 @@ gulp.task('browserifyDist', function() {
 });
 
 gulp.task('connect', function() {
-	connect.server({
+	return connect.server({
 		root : 'app/',
 		port : 8888
 	})
 });
 
 gulp.task('connectDist', function() {
-	connect.server({
+	return connect.server({
 		root : 'dist/',
 		port : 9999
 	});
 });
 
-gulp.task('default', ['lint', 'browserify', 'connect']);
+gulp.task('default', function() {
+	runSequence(['clean'], ['lint', 'browserify'], ['connect']);
+});
 
 gulp.task('build', function() {
 	runSequence(['clean'], ['lint', 'minify-css', 'browserifyDist', 'minify-js', 'copy-html-files', 'copy-bower-components', 'connectDist'])
