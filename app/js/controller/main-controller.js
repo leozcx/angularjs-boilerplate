@@ -1,3 +1,4 @@
 module.exports = function($scope) {
-	$scope.test = "Testing2...";
+	$scope.test = "Testing1...";
+	console.log('in controller');
 };
