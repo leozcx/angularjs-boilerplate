@@ -10,6 +10,7 @@ var browserify = require('gulp-browserify');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var less = require('gulp-less');
+var karma = require('gulp-karma');
 
 gulp.task('lint', function() {
 	return gulp.src([ './app/**/*.js', '!./app/bower_components/**' ]).pipe(jshint())
@@ -99,11 +100,23 @@ gulp.task('connectDist', function() {
 
 gulp.task('watch', ['default'], function() {
 	gulp.watch(['./app/js/**/*.js', '!./app/js/bundled.js'], function() {
-		runSequence(['clean'], ['lint', 'browserify']);
+		runSequence(['clean'], ['lint', 'browserify', 'test']);
 	});
 	gulp.watch(['./app/css/*.less'], function() {
 		runSequence(['less']);
 	});
+});
+
+gulp.task('test', function() {
+	return gulp.src('./fake')
+	.pipe(karma({
+		configFile: 'karma.conf.js',
+		action: 'run'
+	}))
+	.on('error', function(err) {
+		console.log(err);
+		this.emit('end');
+	})
 });
 
 gulp.task('default', function() {
