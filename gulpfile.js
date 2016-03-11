@@ -101,12 +101,15 @@ gulp.task('watch', ['default'], function() {
 	gulp.watch(['./app/js/**/*.js', '!./app/js/bundled.js'], function() {
 		runSequence(['clean'], ['lint', 'browserify']);
 	});
+	gulp.watch(['./app/css/*.less'], function() {
+		runSequence(['less']);
+	});
 });
 
 gulp.task('default', function() {
-	runSequence(['clean'], ['lint', 'browserify'], ['connect']);
+	runSequence(['clean'], ['less', 'lint', 'browserify'], ['connect']);
 });
 
 gulp.task('build', function() {
-	runSequence(['clean'], ['lint', 'minify-css', 'browserifyDist', 'minify-js', 'copy-html-files', 'copy-bower-components', 'connectDist'])
+	runSequence(['clean'], ['less', 'lint', 'minify-css', 'browserifyDist', 'minify-js', 'copy-html-files', 'copy-bower-components', 'connectDist'])
 });
