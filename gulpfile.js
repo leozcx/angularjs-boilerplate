@@ -9,6 +9,7 @@ var runSequence = require('run-sequence');
 var browserify = require('gulp-browserify');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
+var less = require('gulp-less');
 
 gulp.task('lint', function() {
 	return gulp.src([ './app/**/*.js', '!./app/bower_components/**' ]).pipe(jshint())
@@ -19,6 +20,12 @@ gulp.task('clean', function() {
 	return gulp.src(['./dist/*', './app/js/bundled.js']).pipe(clean({
 		force : true
 	}));
+});
+
+gulp.task('less', function()  {
+	return gulp.src('./app/css/*.less')
+	.pipe(less())
+	.pipe(gulp.dest('./app/css'));
 });
 
 gulp.task('minify-css', function() {
