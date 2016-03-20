@@ -13,6 +13,7 @@ var less = require('gulp-less');
 var karma = require('gulp-karma');
 var ngHtml2Js = require("gulp-ng-html2js");
 var minifyHtml = require("gulp-htmlmin");
+var protractor = require("gulp-protractor").protractor;
 
 var moduleName = "SampleApp";
 
@@ -148,6 +149,16 @@ gulp.task('test', function() {
 		console.log(err);
 		this.emit('end');
 	})
+});
+
+gulp.task('e2e', function(done) {
+	var args = ['--baseUrl', 'http://127.0.0.1:8888'];
+	return gulp.src(["./e2e-test/*Spec.js"])
+	    .pipe(protractor({
+	      configFile: "e2e-test/protractor.conf.js",
+	      args: args
+	    }))
+	    .on('error', function(e) { throw e; });
 });
 
 gulp.task('default', function() {

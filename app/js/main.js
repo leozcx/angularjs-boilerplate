@@ -16,15 +16,15 @@ app.config([
     '$locationProvider',
     '$routeProvider',
     function($locationProvider, $routeProvider) {
-      $locationProvider.hashPrefix('!');
+     // $locationProvider.hashPrefix('!');
       // routes
       $routeProvider
-        .when("/", {
+        .when("/view1", {
           templateUrl: "./partials/partial1.html",
           controller: "MainController"
         })
         .otherwise({
-           redirectTo: '/'
+           redirectTo: '/view1'
         });
     }
   ]);

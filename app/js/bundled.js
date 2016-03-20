@@ -67,22 +67,22 @@ app.config([
     '$locationProvider',
     '$routeProvider',
     function($locationProvider, $routeProvider) {
-      $locationProvider.hashPrefix('!');
+     // $locationProvider.hashPrefix('!');
       // routes
       $routeProvider
-        .when("/", {
+        .when("/view1", {
           templateUrl: "./partials/partial1.html",
           controller: "MainController"
         })
         .otherwise({
-           redirectTo: '/'
+           redirectTo: '/view1'
         });
     }
   ]);
 
 }());
 
-}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_6eefb0a4.js","/")
+}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_2302b30f.js","/")
 },{"./controller":1,"./directive":3,"./service":7,"angular":14,"angular-animate":10,"angular-route":12,"buffer":16,"e/U+97":18}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 require('angular');
