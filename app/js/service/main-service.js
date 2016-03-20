@@ -1,5 +1,9 @@
 module.exports = function($http, $q) {
       var user = null;
+      
+      var User = {
+          name: "test"  
+      };
 
       var readStoredUser = function readStoredUser() {
           //Try to read in from localStorage if one exists
@@ -28,7 +32,6 @@ module.exports = function($http, $q) {
 
       var loginWithEmail = function loginWithEmail(name, email) {
           var deferred = $q.defer();
-
           var postPath = 'http://someurl.dev/api/v1/login';
           var postData = { name: name, email: email };
 

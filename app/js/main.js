@@ -9,6 +9,7 @@ require('angular-animate');
 
 var app = angular.module('SampleApp', ['ngRoute', 'ngAnimate']);
 require('./controller');
+require('./service');
 
 app.config([
     '$locationProvider',
