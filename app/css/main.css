@@ -8,3 +8,21 @@
 .class3 {
   border: 1px solid #2d5e8b;
 }
+html,
+body,
+#wrap {
+  height: 100%;
+}
+body > #wrap {
+  height: auto;
+  min-height: 100%;
+}
+#main {
+  padding-bottom: 150px;
+}
+#footer {
+  position: relative;
+  margin-top: -150px;
+  height: 150px;
+  clear: both;
+}

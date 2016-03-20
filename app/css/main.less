@@ -1,4 +1,5 @@
 @color-base: #2d5e8b;
+@footer-height: 150px;
 
 .class1 {
     background-color: @color-base;
@@ -10,3 +11,11 @@
 .class3 {
     border: 1px solid @color-base;
 }
+
+html, body, #wrap {height: 100%;}
+body > #wrap {height: auto; min-height: 100%;}
+#main {padding-bottom: @footer-height;}
+#footer {position: relative;
+	margin-top: -@footer-height;
+	height: @footer-height;
+	clear:both;}
