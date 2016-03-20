@@ -11,9 +11,13 @@ var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var less = require('gulp-less');
 var karma = require('gulp-karma');
+var ngHtml2Js = require("gulp-ng-html2js");
+var minifyHtml = require("gulp-htmlmin");
+
+var moduleName = "SampleApp";
 
 gulp.task('lint', function() {
-	return gulp.src([ './app/**/*.js', '!./app/bower_components/**' ]).pipe(jshint())
+	return gulp.src([ './app/**/*.js', '!./app/bower_components/**', '!./app/js/bundled*.js' ]).pipe(jshint())
 			.pipe(jshint.reporter('default')).pipe(jshint.reporter('fail'));
 });
 
@@ -44,6 +48,33 @@ gulp.task('minify-js', function() {
 			.pipe(uglify({}))
 			.pipe(sourcemaps.write())
 			.pipe(gulp.dest('./dist/'))
+});
+
+gulp.task('minify-html', function() {
+	return gulp.src('./app/js/directive/template/*.html')
+	.pipe(minifyHtml({
+		collapseWhitespace: true
+	}))
+	.pipe(ngHtml2Js({
+		moduleName: moduleName,
+		prefix: "template/"
+	}))
+	.pipe(concat('bundled-template.js'))
+	.pipe(gulp.dest("./app/js"));
+});
+
+gulp.task('minify-html-dist', function() {
+	return gulp.src('./app/js/directive/template/*.html')
+	.pipe(minifyHtml({
+		collapseWhitespace: true
+	}))
+	.pipe(ngHtml2Js({
+		moduleName: moduleName,
+		prefix: "template/"
+	}))
+	.pipe(uglify({}))
+	.pipe(concat('bundled-template.js'))
+	.pipe(gulp.dest("./dist/js"));
 });
 
 gulp.task('copy-bower-components', function() {
@@ -120,9 +151,9 @@ gulp.task('test', function() {
 });
 
 gulp.task('default', function() {
-	runSequence(['clean'], ['less', 'lint', 'browserify'], ['connect']);
+	runSequence(['clean'], ['less', 'lint', 'browserify', 'minify-html'], ['connect']);
 });
 
 gulp.task('build', function() {
-	runSequence(['clean'], ['less', 'lint', 'minify-css', 'browserifyDist', 'minify-js', 'copy-html-files', 'copy-bower-components', 'connectDist'])
+	runSequence(['clean'], ['less', 'lint', 'minify-css', 'browserifyDist', 'minify-js', 'minify-html-dist', 'copy-html-files', 'copy-bower-components', 'connectDist'])
 });

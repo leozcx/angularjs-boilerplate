@@ -1,6 +1,6 @@
 require("angular");
 require('angular-mocks');
-require('../app/js/main');
+require('../../app/js/main');
 
 describe("MainController Unit Tests", function() {
 	var $controller;

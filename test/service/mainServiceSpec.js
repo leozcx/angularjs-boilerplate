@@ -1,6 +1,6 @@
 require('angular');
 require('angular-mocks');
-require('../app/js/main');
+require('../../app/js/main');
 
 describe('MainService Unit Test', function() {
 	var service, $httpBackend;

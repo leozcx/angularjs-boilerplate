@@ -9,14 +9,45 @@ var app = angular.module('SampleApp');
 
 app.controller('MainController', ['$scope', mainController]);
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controller\\index.js","/controller")
-},{"./main-controller":2,"angular":9,"buffer":11,"e/U+97":13}],2:[function(require,module,exports){
+},{"./main-controller":2,"angular":14,"buffer":16,"e/U+97":18}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 module.exports = function($scope) {
 	$scope.test = "Testing1...";
 	console.log('in controller');
 };
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controller\\main-controller.js","/controller")
-},{"buffer":11,"e/U+97":13}],3:[function(require,module,exports){
+},{"buffer":16,"e/U+97":18}],3:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+require('angular');
+var mainDirective = require('./main-directive');
+var templateDirective = require('./template-directive');
+
+var app = angular.module('SampleApp');
+
+app.directive('mainDirective', mainDirective)
+.directive('templateDirective', templateDirective);
+}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/directive\\index.js","/directive")
+},{"./main-directive":4,"./template-directive":5,"angular":14,"buffer":16,"e/U+97":18}],4:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+module.exports = function() {
+	return {
+		restrict : 'E',
+		replace : true,
+		template : '<h1>lidless, wreathed in flame, {{1 + 1}} times</h1>'
+	};
+};
+}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/directive\\main-directive.js","/directive")
+},{"buffer":16,"e/U+97":18}],5:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+module.exports = function() {
+	return {
+		restrict : 'E',
+		replace : true,
+		templateUrl : 'template/template-directive.html'
+	};
+};
+}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/directive\\template-directive.js","/directive")
+},{"buffer":16,"e/U+97":18}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 (function () {
 
@@ -29,6 +60,8 @@ require('angular-animate');
 
 var app = angular.module('SampleApp', ['ngRoute', 'ngAnimate']);
 require('./controller');
+require('./service');
+require('./directive');
 
 app.config([
     '$locationProvider',
@@ -49,8 +82,76 @@ app.config([
 
 }());
 
-}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_257b1e21.js","/")
-},{"./controller":1,"angular":9,"angular-animate":5,"angular-route":7,"buffer":11,"e/U+97":13}],4:[function(require,module,exports){
+}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_6eefb0a4.js","/")
+},{"./controller":1,"./directive":3,"./service":7,"angular":14,"angular-animate":10,"angular-route":12,"buffer":16,"e/U+97":18}],7:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+require('angular');
+
+var mainService = require('./main-service');
+var app = angular.module('SampleApp');
+
+app.factory('MainService', ['$http', '$q', mainService]);
+}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/service\\index.js","/service")
+},{"./main-service":8,"angular":14,"buffer":16,"e/U+97":18}],8:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+module.exports = function($http, $q) {
+      var user = null;
+      
+      var User = {
+          name: "test"  
+      };
+
+      var readStoredUser = function readStoredUser() {
+          //Try to read in from localStorage if one exists
+          var storedUser = window.localStorage.getItem('user');
+          try {
+              if(storedUser) {
+                  // Note: Using a simple user model here
+                  user = new User(JSON.parse(storedUser));
+              }
+          } catch (ex) { /* Silently fail..*/ }
+      };
+
+      readStoredUser();
+
+      var currentUser = function currentUser() {
+          if(!user) {
+              readStoredUser();
+          }
+          return user;
+      };
+
+      var saveUser = function saveUser(userToSave) {
+          window.localStorage.setItem('user', JSON.stringify(userToSave));
+          user = userToSave;
+      };
+
+      var loginWithEmail = function loginWithEmail(name, email) {
+          var deferred = $q.defer();
+          var postPath = 'http://someurl.dev/api/v1/login';
+          var postData = { name: name, email: email };
+
+          $http.post(postPath, postData).success(function(data) {
+              if(data.success) {
+                  deferred.resolve(data);
+              } else {
+                  deferred.reject(data);
+              }
+          }).error(function(error) {
+              deferred.reject(error);
+          });
+
+          return deferred.promise;
+      };
+
+      return {
+          currentUser: currentUser,
+          loginWithEmail: loginWithEmail,
+          saveUser: saveUser
+      };
+  };
+}).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/service\\main-service.js","/service")
+},{"buffer":16,"e/U+97":18}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * @license AngularJS v1.5.0
@@ -4175,13 +4276,13 @@ angular.module('ngAnimate', [])
 })(window, window.angular);
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\angular-animate\\angular-animate.js","/..\\..\\node_modules\\angular-animate")
-},{"buffer":11,"e/U+97":13}],5:[function(require,module,exports){
+},{"buffer":16,"e/U+97":18}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 require('./angular-animate');
 module.exports = 'ngAnimate';
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\angular-animate\\index.js","/..\\..\\node_modules\\angular-animate")
-},{"./angular-animate":4,"buffer":11,"e/U+97":13}],6:[function(require,module,exports){
+},{"./angular-animate":9,"buffer":16,"e/U+97":18}],11:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * @license AngularJS v1.5.0
@@ -5201,13 +5302,13 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 })(window, window.angular);
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\angular-route\\angular-route.js","/..\\..\\node_modules\\angular-route")
-},{"buffer":11,"e/U+97":13}],7:[function(require,module,exports){
+},{"buffer":16,"e/U+97":18}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 require('./angular-route');
 module.exports = 'ngRoute';
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\angular-route\\index.js","/..\\..\\node_modules\\angular-route")
-},{"./angular-route":6,"buffer":11,"e/U+97":13}],8:[function(require,module,exports){
+},{"./angular-route":11,"buffer":16,"e/U+97":18}],13:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * @license AngularJS v1.5.0
@@ -35638,13 +35739,13 @@ $provide.value("$locale", {
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\angular\\angular.js","/..\\..\\node_modules\\angular")
-},{"buffer":11,"e/U+97":13}],9:[function(require,module,exports){
+},{"buffer":16,"e/U+97":18}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 require('./angular');
 module.exports = angular;
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\angular\\index.js","/..\\..\\node_modules\\angular")
-},{"./angular":8,"buffer":11,"e/U+97":13}],10:[function(require,module,exports){
+},{"./angular":13,"buffer":16,"e/U+97":18}],15:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -35772,7 +35873,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\base64-js\\lib\\b64.js","/..\\..\\node_modules\\base64-js\\lib")
-},{"buffer":11,"e/U+97":13}],11:[function(require,module,exports){
+},{"buffer":16,"e/U+97":18}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -36885,7 +36986,7 @@ function assert (test, message) {
 }
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\buffer\\index.js","/..\\..\\node_modules\\buffer")
-},{"base64-js":10,"buffer":11,"e/U+97":13,"ieee754":12}],12:[function(require,module,exports){
+},{"base64-js":15,"buffer":16,"e/U+97":18,"ieee754":17}],17:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
@@ -36973,7 +37074,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 }
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\ieee754\\index.js","/..\\..\\node_modules\\ieee754")
-},{"buffer":11,"e/U+97":13}],13:[function(require,module,exports){
+},{"buffer":16,"e/U+97":18}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -37040,4 +37141,4 @@ process.chdir = function (dir) {
 };
 
 }).call(this,require("e/U+97"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\process\\browser.js","/..\\..\\node_modules\\process")
-},{"buffer":11,"e/U+97":13}]},{},[3])
+},{"buffer":16,"e/U+97":18}]},{},[6])
